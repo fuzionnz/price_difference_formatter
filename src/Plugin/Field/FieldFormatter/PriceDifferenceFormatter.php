@@ -7,7 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\commerce_order\Plugin\Field\FieldFormatter\PriceCalculatedFormatter; // This is the FieldFormatter we want to extend
+use Drupal\commerce_order\Plugin\Field\FieldFormatter\PriceCalculatedFormatter;
 
 /**
  * Plugin implementation of the 'price_difference_formatter' formatter.
