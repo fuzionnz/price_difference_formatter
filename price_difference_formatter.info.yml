@@ -1,0 +1,10 @@
+name: 'Price Difference Formatter'
+description: 'Extend commerce PriceCalculatedFormatter to show old price'
+package: Commerce
+
+type: module
+core: '8.x'
+
+dependencies:
+- commerce:commerce_order
+
