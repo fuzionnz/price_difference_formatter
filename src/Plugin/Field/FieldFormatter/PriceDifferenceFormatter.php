@@ -23,8 +23,7 @@ use Drupal\commerce_order\Plugin\Field\FieldFormatter\PriceCalculatedFormatter;
 class PriceDifferenceFormatter extends PriceCalculatedFormatter implements ContainerFactoryPluginInterface {
 
   /**
-   * {@Inheritdoc}
-   * This is the function we want to extend.
+   * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
