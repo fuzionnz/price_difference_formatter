@@ -43,7 +43,6 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
       // This is our calculated price with the promotion.
       $price_display = $this->currencyFormatter->format($number, $currency_code, $options);
 
-
       // Get price without the promotion.
       $adjustment_types_without_promotion = $adjustment_types;
       unset($adjustment_types_without_promotion['promotion']);
@@ -54,11 +53,13 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
       // This is our calculated price without the promotion.
       $price_display_without_promotion = $this->currencyFormatter->format($number_without_promotion, $currency_code, $options);
 
-      if($price_display_without_promotion != $price_display) {
+      if ($price_display_without_promotion != $price_display) {
         $percentage = ($number_without_promotion - $number) / $number_without_promotion;
-        $discount = '-'.round($percentage * 100, 2) . '%';
+        $discount = '-' . round($percentage * 100, 2) . '%';
         // Set the base price (old-price), the percentage off and the calculated price within $price_display.
-        $price_display = '<div class="old-price">' . $price_display_without_promotion . '</div><div class="percentage-off">' . $discount . '</div><div class="new-price">' . $price_display . '</div>';
+        $price_display = '<div class="old-price">' . $price_display_without_promotion . '</div>';
+        $price_display .= '<div class="percentage-off">' . $discount . '</div>';
+        $price_display .= '<div class="new-price">' . $price_display . '</div>';
       }
       else {
         $price_display = '<div class="new-price">' . $price_display . '</div>';
