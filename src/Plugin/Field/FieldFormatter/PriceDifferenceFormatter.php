@@ -56,7 +56,7 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
       if ($price_display_without_promotion != $price_display) {
         $percentage = ($number_without_promotion - $number) / $number_without_promotion;
         $discount = '-' . round($percentage * 100, 2) . '%';
-        // Set the base price (old-price), the percentage off and the calculated price within $price_display.
+        // Set the base price (old-price), the % and the calculated price.
         $price_display = '<div class="old-price">' . $price_display_without_promotion . '</div>';
         $price_display .= '<div class="percentage-off">' . $discount . '</div>';
         $price_display .= '<div class="new-price">' . $price_display . '</div>';
