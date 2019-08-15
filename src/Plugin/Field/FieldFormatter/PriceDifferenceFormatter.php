@@ -57,16 +57,16 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
         $percentage = ($number_without_promotion - $number) / $number_without_promotion;
         $discount = '-' . round($percentage * 100, 2) . '%';
         // Set the base price (old-price), the % and the calculated price.
-        $price_display = '<div class="old-price">' . $price_display_without_promotion . '</div>';
-        $price_display .= '<div class="percentage-off">' . $discount . '</div>';
-        $price_display .= '<div class="new-price">' . $price_display . '</div>';
+        $html_price = '<div class="old-price">' . $price_display_without_promotion . '</div>';
+        $html_price .= '<div class="percentage-off">' . $discount . '</div>';
+        $html_price .= '<div class="new-price">' . $price_display . '</div>';
       }
       else {
-        $price_display = '<div class="new-price">' . $price_display . '</div>';
+        $html_price = '<div class="new-price">' . $price_display . '</div>';
       }
 
       $elements[0] = [
-        '#markup' => $price_display,
+        '#markup' => $html_price,
         '#cache' => [
           'tags' => $purchasable_entity->getCacheTags(),
           'contexts' => Cache::mergeContexts($purchasable_entity->getCacheContexts(), [
