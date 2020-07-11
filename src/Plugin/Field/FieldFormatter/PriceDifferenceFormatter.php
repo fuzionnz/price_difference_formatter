@@ -3,7 +3,10 @@
 namespace Drupal\price_difference_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\commerce\Context;
+use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_order\Entity\OrderItemInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -29,33 +32,41 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
     $elements = [];
     if (!$items->isEmpty()) {
       $context = new Context($this->currentUser, $this->currentStore->getStore(), NULL, [
-        'field_name' => $items->getName(),
+//        'field_name' => $items->getName(),
       ]);
       /** @var \Drupal\commerce\PurchasableEntityInterface $purchasable_entity */
       $purchasable_entity = $items->getEntity();
+      $quantity = 1;
+      if ($purchasable_entity instanceOf OrderItemInterface) {
+        if($items->getName() === 'total_price'){
+          $quantity = $purchasable_entity->getQuantity();
+        }
+        $purchasable_entity = $purchasable_entity->getPurchasedEntity();
+      }
+
       $adjustment_types = array_filter($this->getSetting('adjustment_types'));
-      $result = $this->priceCalculator->calculate($purchasable_entity, 1, $context, $adjustment_types);
+      $result = $this->priceCalculator->calculate($purchasable_entity, $quantity, $context, $adjustment_types);
       $calculated_price = $result->getCalculatedPrice();
       $number = $calculated_price->getNumber();
       $currency_code = $calculated_price->getCurrencyCode();
       $options = $this->getFormattingOptions();
 
-      // This is our calculated price with the promotion.
+      // This is our calculated price with the promotion
       $price_display = $this->currencyFormatter->format($number, $currency_code, $options);
 
-      // Get price without the promotion.
+      //get price without the promotion
       $adjustment_types_without_promotion = $adjustment_types;
       unset($adjustment_types_without_promotion['promotion']);
-      $result_without_promotion = $this->priceCalculator->calculate($purchasable_entity, 1, $context, $adjustment_types_without_promotion);
+      $result_without_promotion = $this->priceCalculator->calculate($purchasable_entity, $quantity, $context, $adjustment_types_without_promotion);
       $calculated_price_without_promotion = $result_without_promotion->getCalculatedPrice();
       $number_without_promotion = $calculated_price_without_promotion->getNumber();
 
-      // This is our calculated price without the promotion.
+      // This is our calculated price without the promotion
       $price_display_without_promotion = $this->currencyFormatter->format($number_without_promotion, $currency_code, $options);
 
-      if ($price_display_without_promotion != $price_display) {
+      if($price_display_without_promotion != $price_display) {
         $percentage = ($number_without_promotion - $number) / $number_without_promotion;
-        $discount = '-' . round($percentage * 100, 2) . '%';
+        $discount = '-'.round($percentage * 100, 2) . '%';
         // Set the base price (old-price), the % and the calculated price.
         $html_price = '<div class="price-with-discount">';
         $html_price .= '<div class="old-price">' . $price_display_without_promotion . '</div>';
@@ -80,6 +91,14 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
     }
 
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
+    return $entity_type->entityClassImplements(PurchasableEntityInterface::class) || $entity_type->entityClassImplements(OrderItemInterface::class);
   }
 
 }
