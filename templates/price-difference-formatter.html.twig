@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Theme override for price_difference_formatter.
+ *
+ * Available variables:
+ * - original_price:
+ *     The formatted price without the promotion adjustments applied.
+ *     This includes any other adjustments such as fees, taxes, etc.
+ *     that were selected in the formatter settings.
+ * - final_price:
+ *     The formatted price with all selected adjustments applied.
+ * - discount_currency:
+ *     The discount amount formatted in the sites currency (e.g "$49.99")
+ * - discount_percentage:
+ *     The discount amount percentage (e.g "20%")
+ *
+ * @see hook_preprocess_price_difference_formatter().
+ *
+ */
+#}
+{%
+  set classes = [
+    'price',
+    discount_percentage or discount_currency ? 'price-with-discount'
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+    {% if original_price != final_price %}
+      <div class="original-price">
+        <s>{{ original_price }}</s>
+      </div>
+    {% endif %}
+    {% if discount_percentage %}
+    <div class="discount-percentage">- {{ discount_percentage }}</div>
+    {% endif %}
+    {% if discount_currency %}
+    <div class="discount-currency">- {{ discount_currency }}</div>
+    {% endif %}
+    <div class="final-price">{{ final_price }}</div>
+</div>
