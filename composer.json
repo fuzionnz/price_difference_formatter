@@ -1,0 +1,15 @@
+{
+    "name": "drupal/price_difference_formatter",
+    "description": "Field formatter that displays the difference between the list price and the price of Commerce purchasable entities.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/price_difference_formatter",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/price_difference_formatter",
+        "source": "https://git.drupalcode.org/project/price_difference_formatter"
+    },
+    "require": {
+        "drupal/core": "^10.3 || ^11",
+        "drupal/commerce": "^2.30 || ^3.0"
+    }
+}
