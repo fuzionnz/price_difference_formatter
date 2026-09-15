@@ -279,6 +279,37 @@ class PriceDifferenceFormatterTest extends OrderKernelTestBase {
   }
 
   /**
+   * Tests that an order item whose purchased entity is gone renders nothing.
+   *
+   * Abandoned carts can reference product variations that were deleted
+   * later; the formatter must not fail on the NULL purchased entity.
+   */
+  public function testRenderOrderItemWithoutPurchasedEntity(): void {
+    $order_item = OrderItem::create([
+      'type' => 'default',
+      'purchased_entity' => $this->variation,
+      'quantity' => '1',
+      'unit_price' => new Price('3.00', 'USD'),
+    ]);
+    $order_item->save();
+    $this->variation->delete();
+    $order_item = $this->reloadEntity($order_item);
+    $this->assertNull($order_item->getPurchasedEntity());
+
+    $display_options = [
+      'type' => 'price_difference_formatter',
+      'label' => 'hidden',
+      'settings' => [
+        'adjustment_types' => ['promotion' => 'promotion'],
+      ],
+    ];
+    foreach (['unit_price', 'total_price'] as $field_name) {
+      $build = $order_item->get($field_name)->view($display_options);
+      $this->assertSame('', trim((string) $this->container->get('renderer')->renderInIsolation($build)), $field_name);
+    }
+  }
+
+  /**
    * Tests the settings summary.
    */
   public function testSettingsSummary(): void {

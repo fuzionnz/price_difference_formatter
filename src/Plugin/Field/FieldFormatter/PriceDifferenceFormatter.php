@@ -44,6 +44,11 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
         }
         $purchasable_entity = $purchasable_entity->getPurchasedEntity();
       }
+      // Order items whose purchased entity was deleted (abandoned carts, for
+      // example) have nothing to calculate a price for.
+      if (!$purchasable_entity instanceof PurchasableEntityInterface) {
+        return $elements;
+      }
 
       $adjustment_types = array_filter($this->getSetting('adjustment_types'));
 
