@@ -12,7 +12,7 @@ REQUIREMENTS
 ------------
 
 This module requires the following modules:
-* Commece (https://www.drupal.org/project/commerce)
+* Commerce (https://www.drupal.org/project/commerce)
 
 INSTALLATION
 ------------
@@ -22,7 +22,7 @@ INSTALLATION
 CONFIGURATION
 -------------
 
-* Go to the dispaly management page of the fields of product variations:
+* Go to the display management page of the fields of product variations:
   Administration >> Commerce >> Configuration >> Product variation types >> Edit Default (/admin/commerce/config/product-variation-types/default/edit/display)
 
 * Select "Price Difference Formatter" as the format of the price field and configure the options

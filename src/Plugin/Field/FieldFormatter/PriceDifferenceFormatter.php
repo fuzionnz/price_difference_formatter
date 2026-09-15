@@ -33,7 +33,7 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
     $elements = [];
     if (!$items->isEmpty()) {
       $context = new Context($this->currentUser, $this->currentStore->getStore(), NULL, [
-//        'field_name' => $items->getName(),
+      // 'field_name' => $items->getName(),
       ]);
       /** @var \Drupal\commerce\PurchasableEntityInterface $purchasable_entity */
       $purchasable_entity = $items->getEntity();
@@ -124,7 +124,7 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
    * @return array
    *   An array of options.
    */
-  public function getDisplayOptions(){
+  public function getDisplayOptions() {
     return [
       'discount_percentage' => $this->t('The discount percentage amount'),
       'discount_currency' => $this->t('The discount currency amount'),
@@ -147,8 +147,7 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable(FieldDefinitionInterface $field_definition)
-  {
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
     return $entity_type->entityClassImplements(PurchasableEntityInterface::class) || $entity_type->entityClassImplements(OrderItemInterface::class);
   }

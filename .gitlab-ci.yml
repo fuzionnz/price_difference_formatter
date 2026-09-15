@@ -1,0 +1,23 @@
+################################################################################
+# GitLab CI integration for Drupal.org.
+#
+# Uses the official drupal.org GitLab CI templates:
+# https://project.pages.drupalcode.org/gitlab_templates/
+################################################################################
+
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - "/includes/include.drupalci.main.yml"
+      - "/includes/include.drupalci.variables.yml"
+      - "/includes/include.drupalci.workflows.yml"
+
+variables:
+  # Broaden test coverage with the supported PHP/Drupal combinations:
+  # previous major (Drupal 10) and next minor.
+  OPT_IN_TEST_PREVIOUS_MAJOR: 1
+  OPT_IN_TEST_NEXT_MINOR: 1
+  # Fail the pipeline on coding standards violations.
+  _PHPCS_ALLOW_FAILURE: 0
+  _PHPCS_EXTRA: "--runtime-set drupal_core_version $CORE_MAJOR_VERSION"

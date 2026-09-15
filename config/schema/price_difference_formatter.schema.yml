@@ -1,0 +1,10 @@
+field.formatter.settings.price_difference_formatter:
+  type: field.formatter.settings.commerce_price_calculated
+  label: 'Price difference formatter settings'
+  mapping:
+    display_elements:
+      type: sequence
+      label: 'Display elements'
+      sequence:
+        type: string
+        label: 'Display element'
