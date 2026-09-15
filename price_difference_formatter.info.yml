@@ -6,6 +6,6 @@ type: module
 core_version_requirement: ^10 || ^11
 
 dependencies:
-- commerce:commerce_order
-- commerce:commerce_product
-- commerce:commerce_promotion
+  - commerce:commerce_order
+  - commerce:commerce_product
+  - commerce:commerce_promotion
