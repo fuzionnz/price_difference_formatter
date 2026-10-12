@@ -4,6 +4,7 @@ namespace Drupal\price_difference_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\commerce\Context;
 use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_price\Calculator;
 use Drupal\commerce_order\Entity\OrderItemInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -68,9 +69,10 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
       $calculated_price_without_promotion = $result_without_promotion->getCalculatedPrice();
       $number_without_promotion = $calculated_price_without_promotion->getNumber();
 
-      if ($number_without_promotion != $number) {
-        $difference = $number_without_promotion - $number;
-        $percentage = $difference / $number_without_promotion;
+      // Prices are numeric strings: use the commerce calculator (bcmath).
+      if (Calculator::compare($number_without_promotion, $number) !== 0) {
+        $difference = Calculator::subtract($number_without_promotion, $number);
+        $percentage = Calculator::divide($difference, $number_without_promotion);
       }
 
       // Get the display settings for the formatter.
@@ -80,7 +82,7 @@ class PriceDifferenceFormatter extends PriceCalculatedFormatter implements Conta
         '#theme' => 'price_difference_formatter',
         '#final_price' => $this->currencyFormatter->format($number, $currency_code, $options),
         '#original_price' => $this->currencyFormatter->format($number_without_promotion, $currency_code, $options),
-        '#discount_percentage' => (isset($percentage) && isset($display_elements['discount_percentage'])) ? round($percentage * 100, 2) . '%' : NULL,
+        '#discount_percentage' => (isset($percentage) && isset($display_elements['discount_percentage'])) ? round((float) $percentage * 100, 2) . '%' : NULL,
         '#discount_currency' => (isset($difference) && isset($display_elements['discount_currency'])) ? $this->currencyFormatter->format($difference, $currency_code, $options) : NULL,
         '#adjustments' => $result->getAdjustments(),
         '#cache' => [
